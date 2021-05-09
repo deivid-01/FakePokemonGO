@@ -1336,7 +1336,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 133884864}
           m_TargetAssemblyTypeName: LoginController, Assembly-CSharp
-          m_MethodName: OpenKeyBoard
+          m_MethodName: OpenTouchKeyBoard
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1441,7 +1441,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 133884864}
           m_TargetAssemblyTypeName: LoginController, Assembly-CSharp
-          m_MethodName: CloseKeyBoard
+          m_MethodName: CloseTouchKeyBoard
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1693,7 +1693,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 133884864}
           m_TargetAssemblyTypeName: LoginController, Assembly-CSharp
-          m_MethodName: OpenKeyBoard
+          m_MethodName: OpenTouchKeyBoard
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
