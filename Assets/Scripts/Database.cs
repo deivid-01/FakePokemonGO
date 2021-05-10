@@ -67,6 +67,8 @@ public class Database : MonoBehaviour
 
     }
 
+  
+
     void InitializeFirebase()
     {
         auth = FirebaseAuth.DefaultInstance;
@@ -84,9 +86,7 @@ public class Database : MonoBehaviour
     IEnumerator Login(string email, string password)
     {
         //Call the Firebase auth signin function passing the email and password
-        print(email);
-        print(password);
-        print(gameObject.tag);
+  
         var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
 
         yield return new WaitUntil(predicate: () => loginTask.IsCompleted);

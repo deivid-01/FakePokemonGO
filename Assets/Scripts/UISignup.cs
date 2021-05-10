@@ -33,7 +33,7 @@ public class UISignup : MonoBehaviour
     private void OnDestroy()
     {
         GameEvent.instance.OnSignUpSuccessed -= DisplaySuccess;
-        GameEvent.instance.OnSignUpFailed += DisplayError;
+        GameEvent.instance.OnSignUpFailed -= DisplayError;
 
     }
     public void SignUp()
