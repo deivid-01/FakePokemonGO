@@ -30,7 +30,7 @@ public class UILogin : MonoBehaviour
 
     public void Login()
     {
- 
+
         GameEvent.instance.Login(inputEmail.text, inputPassword.text);
     }
     void ResetFields()
@@ -59,10 +59,12 @@ public class UILogin : MonoBehaviour
     void LoadNextScene()
     {
         SceneManager.LoadScene("Game");
+        StopAllCoroutines();
     }
     public void NewAccount()
     {
         SceneManager.LoadScene("Sign up");
+        StopAllCoroutines();
 
     }
 

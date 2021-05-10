@@ -11,9 +11,13 @@ public class GameEvent : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
-        { 
+        {
             instance = this;
-            GameObject.DontDestroyOnLoad(instance);
+            DontDestroyOnLoad(instance);
+        }
+        else
+        { 
+            gameObject.SetActive(false);
         }
     }
 

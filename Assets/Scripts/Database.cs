@@ -11,11 +11,27 @@ public class Database : MonoBehaviour
     FirebaseAuth auth;
     FirebaseUser user;
 
-    public static string  error;
+    #region Singlenton
+    public static Database instance;
     public void Awake()
     {
-        CheckDatabase();
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(instance);
+            CheckDatabase();
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+
     }
+
+    #endregion
+
+    
+   
 
     void CheckDatabase()
     {
@@ -46,7 +62,9 @@ public class Database : MonoBehaviour
     private void OnDestroy()
     {
        GameEvent.instance.OnLogin -= TryLogin;
- 
+        GameEvent.instance.OnSignUp -= TrySignUp;
+
+
     }
 
     void InitializeFirebase()
@@ -66,6 +84,9 @@ public class Database : MonoBehaviour
     IEnumerator Login(string email, string password)
     {
         //Call the Firebase auth signin function passing the email and password
+        print(email);
+        print(password);
+        print(gameObject.tag);
         var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
 
         yield return new WaitUntil(predicate: () => loginTask.IsCompleted);
@@ -100,16 +121,18 @@ public class Database : MonoBehaviour
             //Wait until the task password
             yield return new WaitUntil(predicate: () => registerTask.IsCompleted);
 
-            if (registerTask.Exception != null)
+            if (registerTask.Exception == null)
             {
-                FirebaseException firebaseEx = registerTask.Exception.GetBaseException() as FirebaseException;
-                AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
-                HandlerErrorSignUp(errorCode);
+                
+                StartCoroutine(SetUser(username, registerTask.Result));
             }
             else
             {
-                StartCoroutine(SetUser(username, registerTask.Result));
-
+                FirebaseException firebaseEx = registerTask.Exception.GetBaseException() as FirebaseException;
+            
+                AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
+           
+                HandlerErrorSignUp(errorCode);
             }
         }
     }
@@ -144,7 +167,7 @@ public class Database : MonoBehaviour
 
     void HandlerErrorSignUp(AuthError errorCode)
         {
-            string message = "Register Failed";
+            string message = "Register failed";
             switch (errorCode)
             {
                 case AuthError.MissingEmail:
@@ -154,7 +177,7 @@ public class Database : MonoBehaviour
                     message = "Missing password";
                     break;
                 case AuthError.WeakPassword:
-                    message = "Weak password";
+                    message = "Weak password. Use at least 6 chars";
                     break;
                 case AuthError.EmailAlreadyInUse:
                     message = "Email already in use";
@@ -169,13 +192,14 @@ public class Database : MonoBehaviour
             if (username.Length == 0)
             {
                 //If the username field is blank show a warning
-                GameEvent.instance.SignUpFailed("Missing Username");
+                GameEvent.instance.SignUpFailed("Missing username");
                 return false;
             }
+           
             else if (pass.CompareTo(passx2) != 0)
             {
                 //If the password does not match show a warning
-                GameEvent.instance.SignUpFailed("ssword Does Not Match!");
+                GameEvent.instance.SignUpFailed("Passssword does not match");
                 return false;
             }
 
@@ -202,7 +226,7 @@ public class Database : MonoBehaviour
                     Debug.LogWarning(message: $"Failed to register task with {profileTask.Exception}");
                     FirebaseException firebaseEx = profileTask.Exception.GetBaseException() as FirebaseException;
                     AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
-                    GameEvent.instance.SignUpFailed("Username Set Failed!");
+                    GameEvent.instance.SignUpFailed("Username set failed");
                 }
                 else
                 {

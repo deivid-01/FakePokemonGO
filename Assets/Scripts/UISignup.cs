@@ -10,10 +10,16 @@ public class UISignup : MonoBehaviour
     public InputField inputEmail;
     public InputField inputPassword;
     public InputField inputPasswordx2;
-
+    [Space]
+    [Header("Buttons")]
+    public GameObject goSignUp;
+    [Space]
     [Header("Message Box")]
     public GameObject goMsg;
     public Text txtMsg;
+    [Space]
+    [Header("Scenes")]
+    public string previousScene;
 
     TouchScreenKeyboard keyboard;
 
@@ -33,12 +39,14 @@ public class UISignup : MonoBehaviour
     public void SignUp()
     {
 
-        //GameEvent.instance.SignUp(inputUsername.text, inputEmail.text, inputPassword.text, inputPasswordx2.text);
+     
+
+        GameEvent.instance.SignUp(inputUsername.text, inputEmail.text, inputPassword.text, inputPasswordx2.text);
     }
 
     public void Back()
     {
-        SceneManager.LoadScene("Log in");
+        SceneManager.LoadScene(previousScene);
     }
     void ResetFields()
     {
@@ -48,15 +56,16 @@ public class UISignup : MonoBehaviour
 
     public void DisplaySuccess(string msg)
     {
-        //Change box color 
-        ResetFields();
-
+        if ( goSignUp.activeInHierarchy)
+            goSignUp.SetActive(false);
+        
+        goMsg.GetComponent<Image>().color = Color.green;
+ 
         txtMsg.text = msg;
 
         if (!goMsg.activeInHierarchy)
         {
             StartCoroutine(ShowHideMsg(true));
-
         }
     }
     public void DisplayError(string msg)
@@ -84,7 +93,8 @@ public class UISignup : MonoBehaviour
 
     void LoadNextScene()
     {
-        SceneManager.LoadScene("Login");
+        SceneManager.LoadScene(previousScene);
+        StopAllCoroutines();
     }
 
     #region TouchKeyboard
