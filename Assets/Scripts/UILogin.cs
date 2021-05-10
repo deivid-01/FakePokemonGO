@@ -62,7 +62,8 @@ public class UILogin : MonoBehaviour
     }
     public void NewAccount()
     {
-        print("...Loading next scene");
+        SceneManager.LoadScene("Sign up");
+
     }
 
     public void ExitGame()
