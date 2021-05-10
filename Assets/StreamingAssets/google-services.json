@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "528085105417",
+    "firebase_url": "https://pokemon-go-ef2c0-default-rtdb.firebaseio.com",
+    "project_id": "pokemon-go-ef2c0",
+    "storage_bucket": "pokemon-go-ef2c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528085105417:android:dbf0996988cd5ba62971d8",
+        "android_client_info": {
+          "package_name": "com.nediar.pokemonGO"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528085105417-muu2utnfv9pbr142tbpulsfsgp0ob0b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa5ZpB7MjsFbBQScNEpgR7MFERriNmGUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528085105417-muu2utnfv9pbr142tbpulsfsgp0ob0b3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "528085105417-ogjlru222d4g3ee0p1rt5frd706414q5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nediar.pokemonGO.deivid"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
