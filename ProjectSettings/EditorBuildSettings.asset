@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Game.unity
     guid: c507814bccdde5a4f8673ea3a605734f
   - enabled: 1
-    path: Assets/Scenes/GameV2.unity
-    guid: 9e7de3149df81a845980af7c31827780
+    path: Assets/Scenes/Pokedex.unity
+    guid: 23d75d33c30fc044588836f2d003086a
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 1050711c6caf11c45aaacc6fe0b40bc4, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 9bd7bed644e3252488bb8a87e2bb9366, type: 2}
