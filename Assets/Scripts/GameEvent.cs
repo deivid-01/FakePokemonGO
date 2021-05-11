@@ -35,6 +35,10 @@ public class GameEvent : MonoBehaviour
     public event Action<string> OnSignUpFailed;
     #endregion
 
+
+    #region GameEvents
+    public event Action<Vector3> OnSpawnPokemon;
+    #endregion
     #region Login Triggers
     public void Login(string email, string pass) => OnLogin?.Invoke(email, pass);
     public void LoginSuccessed() => OnLoginSuccessed?.Invoke();
@@ -48,5 +52,8 @@ public class GameEvent : MonoBehaviour
 
     #endregion
 
+    #region Game Triggers
+    public void SpawnPokemon(Vector3 position) => OnSpawnPokemon?.Invoke(position);
+    #endregion
 
 }
