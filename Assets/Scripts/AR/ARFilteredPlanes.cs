@@ -9,10 +9,12 @@ public class ARFilteredPlanes : MonoBehaviour
     public Vector2 minimumPlaneSize;
     public float minimumDistance = 4;
     public ARPlaneManager arPlaneManager;
-
+    int numPlanes;
+    List<int> planesTaken = new List<int>();
     List<ARPlane> arPlanes;
     void Start()
     {
+        numPlanes = arPlaneManager.trackables.count;
         arPlanes = new List<ARPlane>();
         arPlaneManager.planesChanged += OnPlanesChanged;
     }
@@ -24,27 +26,45 @@ public class ARFilteredPlanes : MonoBehaviour
 
     void OnPlanesChanged(ARPlanesChangedEventArgs args)
     {
-        if (args.added != null)
-        {
-            if (args.added.Count > 0)
-            {
-                foreach (ARPlane plane in args.added.Where(plane => (plane.extents.x * plane.extents.y >= (minimumPlaneSize.x * minimumPlaneSize.y)))) //At least 0.1 square meters
-                {
-                    if (ValidatePlane(plane))
-                    { 
-                        arPlanes.Add(plane);
-                        print("...Spawning pokemon");
-                        GameEvent.instance.SpawnPokemon(plane.center);
-                    }
-                  
-                }
-
         
-            }
-            
-        }
+       ShowMePlanes();
+ 
         
    
+    }
+
+    void ShowMePlanes()
+    {
+   
+        if (arPlaneManager.trackables.count > numPlanes)
+        {
+            numPlanes = arPlaneManager.trackables.count;
+            //print("Numplanes: "+numPlanes);
+            int i = 0;
+            foreach (var plane in arPlaneManager.trackables)
+            {
+                bool bigPlane = (plane.extents.x * plane.extents.y >= minimumPlaneSize.x * minimumPlaneSize.y);
+                plane.gameObject.SetActive(bigPlane);
+         
+                if (bigPlane)
+                {
+                    if (!planesTaken.Contains(i))
+                    {
+                        if (ValidatePlane(plane))
+                            {
+                            arPlanes.Add(plane);
+                            GameEvent.instance.SpawnPokemon(plane.center);
+                            planesTaken.Add(i);
+                        }
+                        
+                    }
+                    print($"Plane {i }: {plane.extents}");
+                }
+                i += 1;
+            }
+        }
+
+       
     }
 
     bool ValidatePlane(ARPlane newPlane)

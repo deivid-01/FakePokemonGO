@@ -38,6 +38,14 @@ public class GameEvent : MonoBehaviour
 
     #region GameEvents
     public event Action<Vector3> OnSpawnPokemon;
+    public event Action<string> OnPokemonCaptured;
+    #endregion
+
+    #region Pokedex Events
+    public event Action<string> OnPokedexFoundName;
+    public event Action<string[]> OnPokedexFoundTypes;
+    public event Action<Texture2D> OnPokedexFoundImage;
+
     #endregion
     #region Login Triggers
     public void Login(string email, string pass) => OnLogin?.Invoke(email, pass);
@@ -54,6 +62,11 @@ public class GameEvent : MonoBehaviour
 
     #region Game Triggers
     public void SpawnPokemon(Vector3 position) => OnSpawnPokemon?.Invoke(position);
+    public void PokemonCaptured(string name) => OnPokemonCaptured?.Invoke(name);
     #endregion
-
+    #region Pokedex triggers
+    public void PokedexFoundName(string name) => OnPokedexFoundName?.Invoke(name);
+    public void PokedexFoundTypes(string[] types) => OnPokedexFoundTypes?.Invoke(types);
+    public void PokedexFoundImage(Texture2D texture) => OnPokedexFoundImage?.Invoke(texture);
+    #endregion
 }
