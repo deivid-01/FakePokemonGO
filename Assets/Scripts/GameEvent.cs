@@ -46,6 +46,10 @@ public class GameEvent : MonoBehaviour
     public event Action<string[]> OnPokedexFoundTypes;
     public event Action<Texture2D> OnPokedexFoundImage;
 
+    public event Action<string> OnFindingPokemon;
+    public event Action<PokemonData>  OnPokemonFound;
+    public event Action  OnPokemonFoundFail;
+
     #endregion
     #region Login Triggers
     public void Login(string email, string pass) => OnLogin?.Invoke(email, pass);
@@ -68,5 +72,9 @@ public class GameEvent : MonoBehaviour
     public void PokedexFoundName(string name) => OnPokedexFoundName?.Invoke(name);
     public void PokedexFoundTypes(string[] types) => OnPokedexFoundTypes?.Invoke(types);
     public void PokedexFoundImage(Texture2D texture) => OnPokedexFoundImage?.Invoke(texture);
+
+    public void FindPokemon(string name) => OnFindingPokemon?.Invoke(name);
+    public void PokemonFound(PokemonData pkmData) => OnPokemonFound?.Invoke(pkmData);
+    public void PokemonFoundFail() => OnPokemonFoundFail?.Invoke();
     #endregion
 }

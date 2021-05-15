@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class UIPokedex : MonoBehaviour
 {
+    public string resultScene;
+    public string gameScene;
+    
     public RawImage rawImage_picture;
     
     public InputField input_pkmName;
@@ -62,7 +66,9 @@ public class UIPokedex : MonoBehaviour
     {
         
        // GameEvent.instance.PokemonCaptured(input_pkmName.text);
-        print("Searching pokemon with name " + inputTxt.text);
+
+        PokedexRequest.selectedPokemon = inputTxt.text;
+        SceneManager.LoadScene(resultScene);
     }
     public void SearchPokemon(Text txt_name)
     {
@@ -79,9 +85,14 @@ public class UIPokedex : MonoBehaviour
     public void PreviousPage()
     {
         //  GameEvent.instance.LoadPreviousList();
+
         print("Loading previous Page");
     }
 
+    public void CloseScene()
+    {
+        SceneManager.LoadScene(gameScene);
+    }
     void SetTouchKeyboard()
     {
         keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, autocorrection: true);
@@ -89,14 +100,14 @@ public class UIPokedex : MonoBehaviour
     }
     public void OpenTouchKeyBoard()
     {
-        print("Trying to open keyboard");
+      
 
         if (keyboard != null)
         {
             if (!keyboard.active)
             {
                 keyboard.active = true;
-        print(keyboard.active);
+    
             }
         }
 
@@ -104,7 +115,7 @@ public class UIPokedex : MonoBehaviour
     }
     public void CloseTouchKeyBoard()
     {
-        print("Trying to close keyboard");
+      
 
         if (keyboard != null)
         {

@@ -52,7 +52,7 @@ public class UIGame : MonoBehaviour
     }
     public void DisplayPokedex()
     {
-        GO_podexex.SetActive(true);
-        // SceneManager.LoadScene(pokedexScene);
+        
+       SceneManager.LoadScene(pokedexScene);
     }
 }
