@@ -8,54 +8,69 @@ public class UIPokedex : MonoBehaviour
     public string resultScene;
     public string gameScene;
     
-    public RawImage rawImage_picture;
-    
-    public InputField input_pkmName;
-    public List<RawImage> images_pkms;
-    public List<Button> btns_list;
-   
-    public Text txt_name;
-    public List<Text> txt_types;
+    public List<Text>pokemonNames;
+    public List<RawImage>pokemonImages;
+    public GameObject previousPage;
+    public GameObject nextPage;
+
+
+
+    int actualPage = 0;
 
     TouchScreenKeyboard keyboard;
 
+    private void Awake()
+    {
+        ResetUI();
+    }
+
+    void ResetUI()
+    {
+        previousPage.SetActive(false);
+    }
+
     private void OnEnable()
     {
-     //   GameEvent.instance.OnPokedexFoundName += UpdateName;
-     //   GameEvent.instance.OnPokedexFoundTypes += UpdateTypes;
-       // GameEvent.instance.OnPokedexFoundImage+= UpdateImage;
-    }
 
+        GameEvent.instance.OnPokemonsFound += UpdateData;
+    }
     private void OnDisable()
     {
-      //  GameEvent.instance.OnPokedexFoundName -= UpdateName;
-      //  GameEvent.instance.OnPokedexFoundTypes -= UpdateTypes;
-       // GameEvent.instance.OnPokedexFoundImage -= UpdateImage;
-    }
-    private void Start()
-    {
-        SetTouchKeyboard();
+
+        GameEvent.instance.OnPokemonsFound -= UpdateData;
     }
 
-    void UpdateName(string name)
+ 
+    void UpdateData(List<PokemonMainData> pkmsData)
     {
-        txt_name.text = name;
-    }
 
-    void UpdateTypes(string[] types)
-    {
-        print(types[0]);
-        for (int i = 0; i < types.Length; i++)
+        for (int i = 0; i < pkmsData.Count; i++)
         {
-            txt_types[i].text = types[i];
+            pokemonNames[i].text = StringTools.FirstCharToUpper( pkmsData[i].name ) ;
+        
+            pokemonImages[i].texture= pkmsData[i].sprite;
+            pokemonImages[i].texture.filterMode = FilterMode.Point;
+
+
         }
     }
 
-    void UpdateImage(Texture2D texture)
+    public Sprite CreateNewSprite(Texture2D dst) => Sprite.Create(dst, //Texture 
+                                        new UnityEngine.Rect(0, 0, dst.width, dst.height),//Rect Propierties
+                                        new Vector2(0.5f, 0.5f),                          //Offset
+                                        100);
+    private void Start()
     {
-        rawImage_picture.texture = texture;
-        rawImage_picture.texture.filterMode = FilterMode.Point;
+        SetTouchKeyboard();
+        GetUIData();
     }
+
+    void GetUIData()
+    {
+        GameEvent.instance.FindPokemons(actualPage);
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -64,29 +79,42 @@ public class UIPokedex : MonoBehaviour
 
     public void SearchPokemon(InputField inputTxt)
     {
-        
-       // GameEvent.instance.PokemonCaptured(input_pkmName.text);
 
-        PokedexRequest.selectedPokemon = inputTxt.text;
+        // GameEvent.instance.PokemonCaptured(input_pkmName.text);
+        GameEvent.instance.FindPokemon(inputTxt.text);
+        //PokedexRequest.selectedPokemon = inputTxt.text;
         SceneManager.LoadScene(resultScene);
     }
-    public void SearchPokemon(Text txt_name)
+    public void SearchPokemon(int i )
     {
-        string pkm_name = txt_name.text;
-        //GameEvent.instance.SearchPokemon(pkm_name)
-        print("Searching pokemon with name " + pkm_name);
+        string pkm_name = (pokemonNames[i].text).ToLower();
+        print(pkm_name);
+        GameEvent.instance.FindPokemon(pkm_name);
+
+        SceneManager.LoadScene(resultScene);
+   
     }
 
     public void NextPage() 
-    {
-        //GameEvent.instance.LoadNextList()
-        print("Loading next page");
+    {     
+        actualPage += 1;
+
+        if (actualPage > 0)
+            previousPage.SetActive(true);
+
+        GetUIData();
     }
     public void PreviousPage()
     {
-        //  GameEvent.instance.LoadPreviousList();
+    
+        if (actualPage == 0)
+        {
+            previousPage.SetActive(false);
+            return;
+        }
+        actualPage -= 1;
+        GetUIData();
 
-        print("Loading previous Page");
     }
 
     public void CloseScene()

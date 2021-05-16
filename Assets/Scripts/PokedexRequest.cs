@@ -3,34 +3,74 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using SimpleJSON;
-
+using UnityEngine.SceneManagement;
+using System;
 public class PokedexRequest : MonoBehaviour
 {
     private readonly string BASEPOKE_URl = "https://pokeapi.co/api/v2/";
 
-    public static string selectedPokemon="";
+
+    public static int LIMIT = 9;
+
+
+    public PokemonData pokemonFound;
+
+    #region Singlenton 
+
+    public static PokedexRequest instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(instance);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+
+
+    #endregion
+
 
     private void OnEnable()
     {
-        GameEvent.instance.OnPokemonCaptured += SearchPokemon;
+        //    GameEvent.instance.OnPokemonCaptured += SearchPokemon;
         GameEvent.instance.OnFindingPokemon += SearchPokemon;
+        GameEvent.instance.OnFindingPokemons += SearchPokemons;
     }
     private void OnDisable()
     {
-        GameEvent.instance.OnPokemonCaptured -= SearchPokemon;
+        //    GameEvent.instance.OnPokemonCaptured -= SearchPokemon;
         GameEvent.instance.OnFindingPokemon -= SearchPokemon;
+        GameEvent.instance.OnFindingPokemons -= SearchPokemons;
         StopAllCoroutines();
     }
     private void Start()
     {
-        SearchPokemon(selectedPokemon);
+    
+ 
     }
+
+ 
 
 
     void SearchPokemon(string name)
     {
-      
+
         StartCoroutine(FindPokemonByName(name));
+    }
+
+    void SearchPokemons(int page)
+    {
+
+        StartCoroutine(FindPokemons(page));
+
+
     }
 
 
@@ -70,9 +110,46 @@ public class PokedexRequest : MonoBehaviour
 
     IEnumerator FindPokemonByName(string name)
     {
+
         //Get Main Data
-        print("hola");
-        CoroutineWithData coroutineLoadInfo = new CoroutineWithData(this, LoadPokeInfo(pokemonURL:BASEPOKE_URl + "pokemon/" + name));
+        
+            CoroutineWithData coroutineLoadInfo = new CoroutineWithData(this, GetPokemonData(name));
+            yield return coroutineLoadInfo.coroutine;
+        try
+        {
+            pokemonFound = (PokemonData)coroutineLoadInfo.result;
+            print("data is ready");
+            StartCoroutine(CheckSceneActive());
+        }
+        catch (Exception e)
+        {
+            GameEvent.instance.PokemonFoundFail();
+        }
+        
+
+        
+
+
+
+
+        //Trigger Pokemon found
+        //  GameEvent.instance.PokemonFound(pokemonData);
+
+    }
+
+    IEnumerator CheckSceneActive()
+    {
+        if (SceneManager.GetActiveScene().name == "PokemonInfo")
+        {
+            GameEvent.instance.PokemonFound(pokemonFound);
+        }
+        yield return new WaitForSeconds(1f);
+        CheckSceneActive();
+    }
+    IEnumerator GetPokemonData(string name)
+    {
+        if (name.Length <= 0) yield break;
+        CoroutineWithData coroutineLoadInfo = new CoroutineWithData(this, LoadPokeInfo(pokemonURL: BASEPOKE_URl + "pokemon/" + name));
         yield return coroutineLoadInfo.coroutine;
 
         if (coroutineLoadInfo.result == null) yield break;
@@ -80,22 +157,102 @@ public class PokedexRequest : MonoBehaviour
         JSONNode pokeInfo = (JSONNode)coroutineLoadInfo.result;
 
         //Get Pokemon Sprite
-  
+
         CoroutineWithData coroutineLoadSprite = new CoroutineWithData(this, LoadPokeSrpite(spriteURL: pokeInfo["sprites"]["front_default"]));
         yield return coroutineLoadSprite.coroutine;
-        
+
         //Set Data
-   
-        PokemonData pokemonData = new PokemonData(name:  pokeInfo["name"],
+
+        pokemonFound = new PokemonData(name: pokeInfo["name"],
                                                   height: pokeInfo["height"],
                                                   weight: pokeInfo["weight"],
                                                   types: GetTypes(pokeInfo["types"]),
-                                                  abilities:GetAbilities(pokeInfo["abilities"]),
-                                                  sprite: (Texture2D)coroutineLoadSprite.result);
+                                                  abilities: GetAbilities(pokeInfo["abilities"]),
+                                                  sprite: (Texture2D)coroutineLoadSprite.result,
+                                                  isNull: false);
+     
+        yield return pokemonFound;
+    }
 
-        //Trigger Pokemon found
-        GameEvent.instance.PokemonFound(pokemonData);
-    
+    IEnumerator FindPokemons(int page)
+    {
+        //Get Main Data
+       
+        string pokemonsURL = BASEPOKE_URl + $"pokemon?limit={LIMIT}&offset={LIMIT*(page)}";
+        print(pokemonsURL);
+        CoroutineWithData coroutineLoadInfo = new CoroutineWithData(this, LoadPokeInfo(pokemonsURL));
+        yield return coroutineLoadInfo.coroutine;
+
+        if (coroutineLoadInfo.result == null) yield break;
+
+        JSONNode pokemonsInfo = (JSONNode)coroutineLoadInfo.result;
+
+        string[]names = GetPokemonNames(pokemonsInfo["results"]);
+
+        Texture2D[] textures = new Texture2D[names.Length];
+        int i = 0;
+        int total = names.Length;
+        while (i < total)
+        {
+            string pokeURL = BASEPOKE_URl + "pokemon/" + names[i];
+            CoroutineWithData coroutineLoadInfo2 = new CoroutineWithData(this, LoadPokeInfo(pokeURL));
+            yield return coroutineLoadInfo2.coroutine;
+
+            JSONNode pokeInfo = (JSONNode)coroutineLoadInfo2.result;
+
+            CoroutineWithData coroutineLoadSprite = new CoroutineWithData(this, LoadPokeSrpite(spriteURL: pokeInfo["sprites"]["front_default"]));
+            yield return coroutineLoadSprite.coroutine;
+
+            textures[i] = (Texture2D)coroutineLoadSprite.result;
+
+            i++;
+        }
+        GameEvent.instance.PokemonsFound(CreatePokemonsMainData(
+                                                                names: GetPokemonNames(pokemonsInfo["results"]),
+                                                                textures:textures));
+                                                                
+
+    }
+
+    List<PokemonMainData> CreatePokemonsMainData(string[] names, Texture2D[] textures)
+    {
+        List<PokemonMainData> pokemonMainData = new List<PokemonMainData>(names.Length);
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            pokemonMainData.Add(new PokemonMainData(names[i], textures[i]));
+          
+        }
+
+        return pokemonMainData;
+    }
+
+    string[] GetPokemonNames(JSONNode pokemons)
+    {
+        string[] pokeNames = new string[pokemons.Count];
+        for (int i = 0, j = pokemons.Count - 1; i < pokemons.Count; i++, j--)
+        {
+            pokeNames[j] = pokemons[i]["name"];
+          
+        }
+
+        return pokeNames;
+    }
+    Texture2D[] GetPokemonTextures(Texture2D texture)
+    {
+        // rawImage.texture = texture;
+        //rawImage.texture = texture;
+       // rawImage.texture.filterMode = FilterMode.Point;
+        Texture2D[] pokeTextures = new Texture2D[9];
+        for (int i = 0, j = pokeTextures.Length - 1; i < pokeTextures.Length; i++, j--)
+        {
+            pokeTextures[j] = texture;
+
+        }
+       // rawImage.texture = pokeTextures[0];
+        //rawImage.texture.filterMode = FilterMode.Point;
+
+        return pokeTextures;
     }
 
     string [] GetTypes(JSONNode pokeTypes)
