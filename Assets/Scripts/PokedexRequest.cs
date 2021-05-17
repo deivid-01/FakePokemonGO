@@ -14,6 +14,7 @@ public class PokedexRequest : MonoBehaviour
 
 
     public PokemonData pokemonFound;
+    public List<PokemonData> pokemonsFound;
 
     #region Singlenton 
 
@@ -125,15 +126,6 @@ public class PokedexRequest : MonoBehaviour
         {
             GameEvent.instance.PokemonFoundFail();
         }
-        
-
-        
-
-
-
-
-        //Trigger Pokemon found
-        //  GameEvent.instance.PokemonFound(pokemonData);
 
     }
 
@@ -179,7 +171,7 @@ public class PokedexRequest : MonoBehaviour
         //Get Main Data
        
         string pokemonsURL = BASEPOKE_URl + $"pokemon?limit={LIMIT}&offset={LIMIT*(page)}";
-        print(pokemonsURL);
+      
         CoroutineWithData coroutineLoadInfo = new CoroutineWithData(this, LoadPokeInfo(pokemonsURL));
         yield return coroutineLoadInfo.coroutine;
 
@@ -188,6 +180,8 @@ public class PokedexRequest : MonoBehaviour
         JSONNode pokemonsInfo = (JSONNode)coroutineLoadInfo.result;
 
         string[]names = GetPokemonNames(pokemonsInfo["results"]);
+
+        GameEvent.instance.PokemonFoundNames(names);
 
         Texture2D[] textures = new Texture2D[names.Length];
         int i = 0;
@@ -204,28 +198,15 @@ public class PokedexRequest : MonoBehaviour
             yield return coroutineLoadSprite.coroutine;
 
             textures[i] = (Texture2D)coroutineLoadSprite.result;
+            GameEvent.instance.PokemonFoundTexture(i, textures[i]);
 
             i++;
         }
-        GameEvent.instance.PokemonsFound(CreatePokemonsMainData(
-                                                                names: GetPokemonNames(pokemonsInfo["results"]),
-                                                                textures:textures));
-                                                                
+
 
     }
 
-    List<PokemonMainData> CreatePokemonsMainData(string[] names, Texture2D[] textures)
-    {
-        List<PokemonMainData> pokemonMainData = new List<PokemonMainData>(names.Length);
-
-        for (int i = 0; i < names.Length; i++)
-        {
-            pokemonMainData.Add(new PokemonMainData(names[i], textures[i]));
-          
-        }
-
-        return pokemonMainData;
-    }
+  
 
     string[] GetPokemonNames(JSONNode pokemons)
     {
@@ -238,22 +219,7 @@ public class PokedexRequest : MonoBehaviour
 
         return pokeNames;
     }
-    Texture2D[] GetPokemonTextures(Texture2D texture)
-    {
-        // rawImage.texture = texture;
-        //rawImage.texture = texture;
-       // rawImage.texture.filterMode = FilterMode.Point;
-        Texture2D[] pokeTextures = new Texture2D[9];
-        for (int i = 0, j = pokeTextures.Length - 1; i < pokeTextures.Length; i++, j--)
-        {
-            pokeTextures[j] = texture;
 
-        }
-       // rawImage.texture = pokeTextures[0];
-        //rawImage.texture.filterMode = FilterMode.Point;
-
-        return pokeTextures;
-    }
 
     string [] GetTypes(JSONNode pokeTypes)
     {

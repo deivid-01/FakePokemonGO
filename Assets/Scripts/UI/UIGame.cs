@@ -11,6 +11,7 @@ public class UIGame : MonoBehaviour
     [Space]
     [Header("Scenes ")]
     public string pokedexScene;
+    public string previousScene;
 
     void Start()
     {
@@ -32,7 +33,8 @@ public class UIGame : MonoBehaviour
 
     public void LogOut()
     {
-        print("...Logging out");
+        SceneManager.LoadScene(previousScene);
+
     }
 
     public void DisplayMenu()

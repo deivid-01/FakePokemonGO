@@ -49,6 +49,8 @@ public class GameEvent : MonoBehaviour
     public event Action<string> OnFindingPokemon;
     public event Action <int>OnFindingPokemons;
     public event Action<PokemonData>  OnPokemonFound;
+    public event Action<string[]>  OnPokemonFoundNames;
+    public event Action<int,Texture2D>  OnPokemonFoundTexture;
     public event Action<List<PokemonMainData>>  OnPokemonsFound;
     public event Action  OnPokemonFoundFail;
 
@@ -78,6 +80,8 @@ public class GameEvent : MonoBehaviour
     public void FindPokemon(string name) => OnFindingPokemon?.Invoke(name);
     public void FindPokemons(int actualPage) => OnFindingPokemons?.Invoke(actualPage);
     public void PokemonFound(PokemonData pkmData) => OnPokemonFound?.Invoke(pkmData);
+    public void PokemonFoundNames(string[] names) => OnPokemonFoundNames?.Invoke(names);
+    public void PokemonFoundTexture(int index,Texture2D texture) => OnPokemonFoundTexture?.Invoke(index,texture);
     public void PokemonsFound(List<PokemonMainData> pkmsData) => OnPokemonsFound?.Invoke(pkmsData);
     public void PokemonFoundFail() => OnPokemonFoundFail?.Invoke();
     #endregion
