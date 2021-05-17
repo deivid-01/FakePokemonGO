@@ -53,6 +53,8 @@ public class GameEvent : MonoBehaviour
     public event Action<int,Texture2D>  OnPokemonFoundTexture;
     public event Action<List<PokemonMainData>>  OnPokemonsFound;
     public event Action  OnPokemonFoundFail;
+    public event Action OnThrowingPokeball;
+    public event Action<string> OnCatchedPokemon;
 
     #endregion
     #region Login Triggers
@@ -84,5 +86,8 @@ public class GameEvent : MonoBehaviour
     public void PokemonFoundTexture(int index,Texture2D texture) => OnPokemonFoundTexture?.Invoke(index,texture);
     public void PokemonsFound(List<PokemonMainData> pkmsData) => OnPokemonsFound?.Invoke(pkmsData);
     public void PokemonFoundFail() => OnPokemonFoundFail?.Invoke();
+
+    public void ThrowingPokeball() => OnThrowingPokeball?.Invoke();
+    public void CatchedPokemon(string name) => OnCatchedPokemon?.Invoke(name);
     #endregion
 }

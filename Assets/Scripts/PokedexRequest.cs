@@ -40,13 +40,16 @@ public class PokedexRequest : MonoBehaviour
 
     private void OnEnable()
     {
-        //    GameEvent.instance.OnPokemonCaptured += SearchPokemon;
+        if (GameEvent.instance == null)
+        {
+            print("It's null");
+        }
         GameEvent.instance.OnFindingPokemon += SearchPokemon;
         GameEvent.instance.OnFindingPokemons += SearchPokemons;
     }
     private void OnDisable()
     {
-        //    GameEvent.instance.OnPokemonCaptured -= SearchPokemon;
+      
         GameEvent.instance.OnFindingPokemon -= SearchPokemon;
         GameEvent.instance.OnFindingPokemons -= SearchPokemons;
         StopAllCoroutines();
@@ -62,7 +65,7 @@ public class PokedexRequest : MonoBehaviour
 
     void SearchPokemon(string name)
     {
-
+        print("Searching pokemon with name " + name);
         StartCoroutine(FindPokemonByName(name));
     }
 

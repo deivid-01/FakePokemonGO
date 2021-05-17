@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Pokeball : MonoBehaviour
 {
     Rigidbody rg;
+
+    public string pokedexInfoScene;
+
     private void Start()
     {
         rg = GetComponent<Rigidbody>();
@@ -13,8 +16,23 @@ public class Pokeball : MonoBehaviour
     {
         if (collision.collider.tag.Equals("pokemon"))
         {
-            StartCoroutine( CatchPokemon(collision.collider.gameObject));
+            string name = collision.collider.GetComponent<Pokemon>().name;
+           
+
+            UIPokemonInfo.previousScene = SceneManager.GetActiveScene().name;
+            GameEvent.instance.FindPokemon((name).ToLower());
+            GameEvent.instance.CatchedPokemon(name);
+            
+
+            StartCoroutine(DestroyPokemon(collision.collider.gameObject));
         }
+    }
+
+    IEnumerator DestroyPokemon(GameObject go)
+    {
+        yield return new WaitForSeconds(0.2f);
+        Destroy(go);
+        SceneManager.LoadScene(pokedexInfoScene);
     }
 
     IEnumerator CatchPokemon(GameObject GOPokemon)

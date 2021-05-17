@@ -104,24 +104,13 @@ public class PokeballMovement : MonoBehaviour
         holding = false;
         thrown = true;
 
-        StartCoroutine(ResetThrow());
+        GameEvent.instance.ThrowingPokeball();
+
+        Destroy(gameObject, 4);
     }
 
-    IEnumerator ResetThrow()
-    {
-        yield return new WaitForSeconds(2f);
-
-        transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.1f, Camera.main.nearClipPlane * 7.5f));
-        newPosition = transform.position;
-        thrown = holding = false;
-
-        _rigidbody.useGravity = false;
-        _rigidbody.velocity = Vector3.zero;
-        _rigidbody.angularVelocity = Vector3.zero;
-        transform.rotation = Quaternion.Euler(0f, 180, 0f);
-        transform.SetParent(Camera.main.transform);
-
-    }
+ 
+  
 
 
 

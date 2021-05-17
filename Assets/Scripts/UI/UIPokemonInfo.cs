@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class UIPokemonInfo : MonoBehaviour
 {
-    public string previousScene;
+    public static string previousScene;
     public GameObject GO_tableData;
     public GameObject GO_error;
     public Text txt_name;
@@ -32,11 +32,7 @@ public class UIPokemonInfo : MonoBehaviour
         GameEvent.instance.OnPokemonFound -= DisplayInfo;
         GameEvent.instance.OnPokemonFoundFail -= DisplayError;
     }
-    private void Start()
-    {
-        // GameEvent.instance.FindPokemon(pokemonName);
-      //  DisplayInfo(PokedexRequest.instance.pokemonFound);
-    }
+
 
     void ResetUI()
     {

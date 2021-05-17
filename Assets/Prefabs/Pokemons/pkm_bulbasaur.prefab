@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4954991856092988787}
   m_Layer: 0
   m_Name: pkm_bulbasour
-  m_TagString: Untagged
+  m_TagString: pokemon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,8 +44,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.05684386, y: 0.050230376, z: 0.036123034}
-  m_Center: {x: -0.004582675, y: 0.023431087, z: -0.00050549285}
+  m_Size: {x: 0.693065, y: 0.96240276, z: 1.0811608}
+  m_Center: {x: 0.012025505, y: 0.44885597, z: 0.07742512}
 --- !u!114 &4954991856092988787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 634950ecc00769b468dfe27aa9d6d04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: bulbasour
+  name: bulbasaur
 --- !u!1001 &7535941659507570165
 PrefabInstance:
   m_ObjectHideFlags: 0

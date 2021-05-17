@@ -7,23 +7,13 @@ public class UIGame : MonoBehaviour
 {
     [Header("Game Objects")]
     public GameObject GO_menuOptions;
-    public GameObject GO_podexex;
+
     [Space]
     [Header("Scenes ")]
     public string pokedexScene;
     public string previousScene;
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+ 
 
     public void ExitGame()
     {

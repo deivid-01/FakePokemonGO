@@ -92,6 +92,7 @@ public class UIPokedex : MonoBehaviour
         // GameEvent.instance.PokemonCaptured(input_pkmName.text);
         GameEvent.instance.FindPokemon((inputTxt.text).ToLower());
         //PokedexRequest.selectedPokemon = inputTxt.text;
+        UIPokemonInfo.previousScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(resultScene);
     }
     public void SearchPokemon(int i )
@@ -99,6 +100,7 @@ public class UIPokedex : MonoBehaviour
         string pkm_name = (pokemonNames[i].text).ToLower();
         print(pkm_name);
         GameEvent.instance.FindPokemon(pkm_name);
+        UIPokemonInfo.previousScene = SceneManager.GetActiveScene().name;
 
         SceneManager.LoadScene(resultScene);
    

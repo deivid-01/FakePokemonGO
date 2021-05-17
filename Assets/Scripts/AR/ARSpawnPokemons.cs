@@ -36,11 +36,24 @@ public class ARSpawnPokemons : MonoBehaviour
     private void OnEnable()
     {
         GameEvent.instance.OnSpawnPokemon += SpawnPokemon;
+        GameEvent.instance.OnCatchedPokemon += RemovePokemon;
 
+    }
+    public void RemovePokemon(string name)
+    {
+        for (int i = 0; i < pokemons.Count; i++)
+        {
+            if (pokemons[i].name.Equals(name))
+            {
+                pokemons.Remove(pokemons[i]);
+                break;
+            }
+        } 
     }
 
     private void OnDisable()
     {
+        GameEvent.instance.OnCatchedPokemon -= RemovePokemon;
         GameEvent.instance.OnSpawnPokemon -= SpawnPokemon;
 
     }
@@ -57,7 +70,7 @@ public class ARSpawnPokemons : MonoBehaviour
             int idx = Random.Range(0, pokemons.Count);
 
             GameObject GO_pokemon = pokemons[idx].gameObject;
-            pokemons.RemoveAt(idx);
+           // pokemons.RemoveAt(idx);
 
             return GO_pokemon;
         }
@@ -65,35 +78,6 @@ public class ARSpawnPokemons : MonoBehaviour
         return GO_default;
         
     }
-    bool TryGetTouchPosition(out Vector2 touchPosition)
-    {
-        if (Input.touchCount > 0)
-        {
-            touchPosition = Input.GetTouch(0).position;
-            return true;
-        }
-        touchPosition = default;
-        return false;
-    }
 
-    private void Update()
-    {
-        /*
-        if (!TryGetTouchPosition(out Vector2 touchPosition))
-            return;
-        if (arRaycastManager.Raycast(touchPosition, hits, TrackableType.PlaneWithinPolygon))
-        {
-            var hitPose = hits[0].pose;
 
-            //if (spawnedObject == null)
-            {
-                spawnedObject = Instantiate(prefab, hitPose.position, hitPose.rotation);
-            }
-            //else
-            {
-              //  spawnedObject.transform.position = hitPose.position;
-            }
-        }
-        */
-    }
 }
