@@ -10,4 +10,5 @@ Augmented reality Minigame base on the videogame "Pokemon GO" :trophy: . Where y
 </br>
 
 - Search them in the Pokedex </br>
-![ezgif com-gif-maker (30)](https://user-images.githubusercontent.com/50857082/191632336-fda9976f-4013-4215-b469-b59763892c98.gif)
+![ezgif com-gif-maker (31)](https://user-images.githubusercontent.com/50857082/191632541-033c9954-61cb-4fcc-8cc8-a5ec1dc1bbeb.gif)
+
